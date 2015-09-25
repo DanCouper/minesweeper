@@ -43,7 +43,6 @@ defmodule Minesweeper.GridUnidirectedGraph do
   @doc """
   NOTE side effects
   """
-  @spec generate_unlabelled_graph([{key, value}]) :: digraph
   def generate_unlabelled_graph(options) do
     opts = Keyword.merge(options, @default_opts)
     coordlist = generate_nodes(opts[:width], opts[:height])
@@ -56,7 +55,6 @@ defmodule Minesweeper.GridUnidirectedGraph do
   @doc """
   NOTE side effects
   """
-  @spec add_vertices(digraph, [{number, number}, ...]) :: digraph
   def add_vertices(graph, coordlist) do
     Enum.each(coordlist, fn coord -> :digraph.add_vertex(graph, coord) end)
     # return the mutated graph:
@@ -66,7 +64,6 @@ defmodule Minesweeper.GridUnidirectedGraph do
   @doc """
   NOTE side effects
   """
-  @spec add_edges(digraph, [{number, number}, ...], number, number, [{number, number}, ...]) :: digraph
   def add_edges(graph, coordlist, width, height, directions) do
     coordlist
     |> Enum.each(fn coord ->
