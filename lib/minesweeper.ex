@@ -1,0 +1,2 @@
+defmodule Minesweeper do
+end
