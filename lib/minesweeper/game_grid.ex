@@ -1,4 +1,4 @@
-defmodule Minesweeper.GridUnidirectedGraph do
+defmodule Minesweeper.GameGrid do
   @moduledoc """
   Represent a game grid as a unidirected graph. For example:
 
