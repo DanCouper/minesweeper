@@ -37,19 +37,46 @@ defmodule Minesweeper.GameGrid do
     width: 10,
     height: 10,
     directions: [{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1},{0, -1}, {-1, -1}],
-    grid_indexing: 1
   ]
+
+  defmodule Minesweeper.Cell, do: defstruct :mined, :flagged, :exposed
+  alias Minesweeper.Cell
 
   @doc """
   NOTE side effects
   """
-  def generate_unlabelled_graph(options) do
+  def generate_unlabelled_graph(options \\ @default_opts) do
     opts = Keyword.merge(options, @default_opts)
     coordlist = generate_nodes(opts[:width], opts[:height])
 
     :digraph.new()
     |> add_vertices(coordlist)
     |> add_edges(coordlist, opts[:width], opts[:height], opts[:directions])
+  end
+
+  def generate_cells(options \\ @default_opts) do
+  end
+
+  @doc """
+  Given a list of values, and given the list is the same length as grid width
+  multiplied by grid height, label every vertex in `graph` with the corresponding value
+  from {min,min} to {max,max}.
+  """
+  def add_labels!(graph, labels) do
+    vertices = :digraph.vertices(graph)
+
+    case length(vertices) == length(labels) do
+      false -> raise "Mismatch between number of labels and number of vertices"
+      true -> for v <- vertices, l <- labels, do: :digraph.add_vertex(graph, v, [l]); graph
+    end
+  end
+
+  def clear_labels(graph) do
+    graph
+    |> :digraph.vertices()
+    |> Enum.each(fn v -> :digraph.add_vertex(graph, v, []) end)
+
+    graph
   end
 
   @doc """
@@ -91,8 +118,8 @@ defmodule Minesweeper.GameGrid do
     end
   end
 
-  defp range(min \\ 1, max) do
-    modifier = min - 1
-    Range.new(min, max + modifier)
+
+  defp range(max) do
+    Range.new(0, max - 1)
   end
 end
